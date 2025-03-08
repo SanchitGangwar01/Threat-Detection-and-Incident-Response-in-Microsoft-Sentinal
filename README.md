@@ -25,13 +25,23 @@ https://github.com/javiersoriano/sentinel-all-in-one
 
    Confirm that logs such as security alerts, Log Analytics query logs, and security incidents are being ingested into Microsoft Sentinel. This verification ensures that Sentinel has the necessary data to monitor and analyze security events effectively.
 
+![Alt text](screenshots/log2.png)
+![Alt text](screenshots/log3.png)
+![Alt text](screenshots/log4.png)
+![Alt text](screenshots/log5.png)
+![Alt text](screenshots/log6.png)
+![Alt text](screenshots/log8.png)
+![Alt text](screenshots/log9.png)
 
 
 ## Creating a Watchlist for Tor Exit Nodes
-
 1. **Prepare the Tor Exit Nodes CSV File:**
 
    Obtain a list of current Tor exit nodes and save it as a CSV file on your local machine. This list will serve as the basis for the watchlist in Microsoft Sentinel.
+![Alt text](screenshots/watchlist1.png)
+![Alt text](screenshots/watchlist2.png)
+![Alt text](screenshots/watchlist2.png)
+![Alt text](screenshots/watchlist3.png)
 
 
 2. **Import the Watchlist into Microsoft Sentinel:**
@@ -48,23 +58,19 @@ https://github.com/javiersoriano/sentinel-all-in-one
 
 
 ## Developing an Analytics Rule for Tor Network Sign-Ins
+![Alt text](screenshots/analytics_new.png)
 
 1. **Create a Scheduled Analytics Rule:**
 
    - In Microsoft Sentinel, navigate to the "Analytics" section.
    - Click on "Create" and select "Scheduled query rule."
    - Provide a name for the rule, such as "Successful Sign-In from Tor Network," and include a description outlining its purpose.
+![Alt text](screenshots/analytics_create_new.png)
 
 2. **Define the Rule Logic:**
 
    Construct a Kusto Query Language (KQL) query that identifies successful sign-in attempts originating from IP addresses listed in the "trace_tor_ip" watchlist.
-
-   ```kql
-   let TorIPs = _GetWatchlist('trace_tor_ip');
-   SigninLogs
-   | where IPAddress in (TorIPs)
-   | where ResultType == 0
-   ```
+![Alt text](screenshots/analytics_rule_(2).png)
 
 
 3. **Configure Entity Mapping:**
@@ -73,12 +79,14 @@ https://github.com/javiersoriano/sentinel-all-in-one
 
    - **Account:** SID, username, display name, and user principal name.
    - **IP Address:** Source IP address associated with the sign-in attempt.
+![Alt text](screenshots/analytics_final.png)
 
 
 4. **Set the Query Schedule:**
 
    - Configure the rule to run every 5 minutes to ensure timely detection of suspicious sign-ins.
    - Enable alert grouping to consolidate related alerts into a single incident for streamlined investigation.
+![Alt text](screenshots/analytics_final2.png)
 
 
 5. **Activate the Analytics Rule:**
@@ -92,6 +100,9 @@ https://github.com/javiersoriano/sentinel-all-in-one
 
    - In Azure Active Directory (AD), create a new user account with the username "sanchit" and assign a secure password.
    - Assign the "Security Reader" role to this user to grant necessary permissions.
+![Alt text](screenshots/all_user.png)
+![Alt text](screenshots/create_new_user.png)
+![Alt text](screenshots/user_new_created.png)
 
    *Reference: [Assign Azure AD roles to users](https://learn.microsoft.com/en-us/azure/active-directory/roles/manage-roles)*
 
@@ -99,15 +110,24 @@ https://github.com/javiersoriano/sentinel-all-in-one
 
    - Navigate to the "Access control (IAM)" section in Azure.
    - Add role assignments for the "Privileged Administrator" and "Contributor" roles to the "sanchit" user.
+![Alt text](screenshots/user_info.png)
+![Alt text](screenshots/IAM_access_control.png)
+
+
+
 
    *Reference: [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)*
 
 3. **Simulate a Sign-In from the Tor Network:**
 
    - Using the Brave browser configured with Tor, log in to the Azure portal using the "sanchit" account.
-   - This action simulates a sign-in attempt from the Tor network, which should trigger the previously configured analytics rule.
+   - This action simulates a sign-in attempt from the Tor network, which should trigger the previously configured analytics rule it also delete the diagnostic settings to stop logs generation.
+
+![Alt text](screenshots/threat_login.png)
+![Alt text](screenshots/delete_diagnostic_settings.png)
 
    *Reference: [Tor Browser](https://www.torproject.org/download/)*
+
 
 
 ## Incident Investigation and Response
@@ -116,6 +136,11 @@ https://github.com/javiersoriano/sentinel-all-in-one
 
    - Upon the simulated sign-in, Microsoft Sentinel generates an incident titled "Successful Sign-In from Tor Network."
    - As a security analyst, access the Microsoft Sentinel portal to review and investigate the incident.
+![Alt text](screenshots/incident_overview.png)
+
+
+
+
 
    *Reference: [Investigate incidents with Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/investigate-incidents)*
 
@@ -126,30 +151,45 @@ https://github.com/javiersoriano/sentinel-all-in-one
    - Examine the IP address involved in the sign-in attempt and cross-reference it with external threat intelligence sources, such as AbuseIPDB, to assess its reputation.
 
    *Reference: [AbuseIPDB](https://www.abuseipdb.com/)*
+![Alt text](screenshots/incident_handling.png)
+![Alt text](screenshots/incident_analyzing.png)
+![Alt text](screenshots/incident_analyzing_2.png)
+![Alt text](screenshots/incident_log2.png)
+![Alt text](screenshots/incident_signin_log.png)
+
+
 
 3. **Analyze User Entity Behavior:**
 
    - Navigate to the "Entity behavior" section in Microsoft Sentinel to review the activities associated with the "sanchit" user account.
    - Assess any anomalies or patterns that could indicate malicious intent.
 
+![Alt text](screenshots/entity_preview_2.png)
 
 4. **Remediate the Threat:**
 
    - Based on the investigation, determine that the "sanchit" account poses a security risk.
-   - Navigate to Azure AD and disable the "sanchit" user account to prevent further unauthorized access.
+   - Navigate to Azure AD and disable the "sanchit" user account to prevent further unauthorized access and disable the user.
+
+![Alt text](screenshots/disable_user.png)
+
 
    *Reference: [Block a user in Azure AD](https://learn.microsoft.com/en-us/azure/active-directory/user-help/user-help-block-user-account)*
 
 5. **Reconfigure Diagnostic Settings:**
 
    - Ensure that diagnostic settings for the Log Analytics workspace and Microsoft Sentinel are correctly configured to continue monitoring and logging activities.
-
+![Alt text](screenshots/bring_diagnostic.png)
    *Reference: [Configure diagnostic settings for Azure resources](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/diagnostic-settings)*
+
 
 6. **Close the Incident:**
 
    - Document the investigation findings, actions taken, and any recommendations for future prevention.
    - Close the incident in Microsoft Sentinel, providing a detailed description of the remediation steps executed.
+![Alt text](screenshots/closing_incident.png)
+![Alt text](screenshots/closing_incident2.png)
+
 
    *Reference: [Manage incidents in Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/incidents)*
 
