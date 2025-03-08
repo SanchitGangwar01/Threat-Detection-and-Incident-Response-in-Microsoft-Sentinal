@@ -20,7 +20,7 @@ https://github.com/javiersoriano/sentinel-all-in-one
    After deployment, ensure that the Log Analytics workspace, named "siemsec," is properly configured. This involves setting up diagnostic settings to route logs and telemetry data into Microsoft Sentinel for analysis.
 
    *Reference: [Best practices for Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/best-practices)*
-
+![Alt text](screenshots/dashboard)
 3. **Verify Log Ingestion:**
 
    Confirm that logs such as security alerts, Log Analytics query logs, and security incidents are being ingested into Microsoft Sentinel. This verification ensures that Sentinel has the necessary data to monitor and analyze security events effectively.
